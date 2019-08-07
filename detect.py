@@ -33,6 +33,7 @@ if __name__ == "__main__":
     parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
     parser.add_argument("--checkpoint_model", type=str, help="path to checkpoint model")
+    parser.add_argument("--no_text", help="do not put label on the output images", action="store_true")
     opt = parser.parse_args()
     print(opt)
 
@@ -123,14 +124,15 @@ if __name__ == "__main__":
                 # Add the bbox to the plot
                 ax.add_patch(bbox)
                 # Add label
-                plt.text(
-                    x1,
-                    y1,
-                    s=classes[int(cls_pred)],
-                    color="white",
-                    verticalalignment="top",
-                    bbox={"color": color, "pad": 0},
-                )
+                if not opt.no_text:
+                    plt.text(
+                        x1,
+                        y1,
+                        s=f"{classes[int(cls_pred)]}: {conf}",
+                        color="white",
+                        verticalalignment="top",
+                        bbox={"color": color, "pad": 0},
+                    )
 
         # Save generated image with detections
         plt.axis("off")
